@@ -1,6 +1,5 @@
 import os
 import requests
-from datetime import datetime, timedelta
 from langchain_core.tools import tool
 
 
@@ -78,13 +77,18 @@ def flight_search_tool(origin: str, destination: str, date: str) -> str:
 
 
 @tool
-def itinerary_tool(city: str, days: int) -> str:
+def itinerary_tool(city: str, days: str) -> str:
     """Generate a day-by-day travel itinerary for a city.
     
     Args:
         city: Destination city name, e.g. 'Tokyo'
-        days: Number of days for the trip, e.g. 3
+        days: Number of days as a string, e.g. '3'
     """
+    try:
+        num_days = int(days)
+    except (ValueError, TypeError):
+        num_days = 3
+
     plans = {
         "Tokyo": [
             "Shinjuku, Meiji Shrine, Harajuku",
@@ -107,13 +111,34 @@ def itinerary_tool(city: str, days: int) -> str:
             "Ramoji Film City",
             "Salar Jung Museum, Nehru Zoological Park",
         ],
+        "Goa": [
+            "Baga Beach, water sports, Calangute Beach",
+            "Old Goa churches, Dudhsagar Waterfalls",
+            "Palolem Beach, sunset cruise, night market",
+            "Anjuna flea market, Vagator Beach",
+            "Fort Aguada, spice plantation tour",
+        ],
+        "Dubai": [
+            "Burj Khalifa, Dubai Mall, Dubai Fountain",
+            "Desert Safari, dune bashing, BBQ dinner",
+            "Palm Jumeirah, Atlantis, JBR Beach",
+            "Gold Souk, Spice Souk, Dubai Creek",
+            "Miracle Garden, Global Village",
+        ],
+        "Singapore": [
+            "Marina Bay Sands, Gardens by the Bay, Merlion",
+            "Sentosa Island, Universal Studios",
+            "Chinatown, Little India, Clarke Quay",
+            "Singapore Zoo, Night Safari",
+            "Orchard Road shopping, hawker centres",
+        ],
     }
 
-    city_plan = plans.get(city, [f"Explore local attractions in {city}"] * 5)
-    lines = [f"🗺️ {days}-Day Itinerary for {city}\n"]
-    for i in range(min(days, 5)):
+    city_plan = plans.get(city, [f"Explore local attractions, museums, and cuisine of {city}"] * 5)
+    lines = [f"🗺️ {num_days}-Day Itinerary for {city}\n"]
+    for i in range(min(num_days, 5)):
         lines.append(f"Day {i+1}: {city_plan[i]}")
-    if days > 5:
-        for i in range(5, days):
+    if num_days > 5:
+        for i in range(5, num_days):
             lines.append(f"Day {i+1}: Explore more of {city} at your own pace")
     return "\n".join(lines)
