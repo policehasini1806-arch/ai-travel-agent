@@ -67,7 +67,7 @@ class RAGChatbot:
         retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
 
         llm = ChatGroq(
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-120b",
             api_key=self.groq_api_key,
             temperature=0,
         )
