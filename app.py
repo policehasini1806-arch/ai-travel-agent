@@ -40,9 +40,11 @@ with st.sidebar:
             "Upload PDF / TXT", type=["pdf", "txt"], accept_multiple_files=True
         )
         if uploaded:
+            upload_dir = "data/uploads"
+            os.makedirs(upload_dir, exist_ok=True)   # <-- creates the folder if missing
             saved_paths = []
             for f in uploaded:
-                path = os.path.join("data/uploads", f.name)
+                path = os.path.join(upload_dir, f.name)
                 with open(path, "wb") as out:
                     out.write(f.read())
                 saved_paths.append(path)
