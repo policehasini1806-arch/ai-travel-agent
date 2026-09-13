@@ -23,7 +23,7 @@ class TravelAgent:
             raise EnvironmentError("GROQ_API_KEY not set in .env")
 
         self.llm = ChatGroq(
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-120b",
             api_key=api_key,
             temperature=0.3,
         )
